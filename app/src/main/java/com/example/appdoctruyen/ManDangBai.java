@@ -37,7 +37,6 @@ public class ManDangBai extends AppCompatActivity {
                 String tentruyen = edtTieuDe.getText().toString();
                 String noidung = edtNoiDung.getText().toString();
                 String img = edtAnh.getText().toString();
-
                 Truyen truyen = CreatTruyen();
 
                 if(tentruyen.equals("") || noidung.equals("") || img.equals("")){
