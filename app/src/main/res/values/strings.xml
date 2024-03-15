@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AppDocTruyen</string>
+    <string name="ng_nh_p">Đăng nhập</string>
+    <string name="taikhoan">Tài khoản</string>
+    <string name="matkhau">Mật khẩu</string>
+    <string name="dangnhap">Đăng nhập</string>
+    <string name="dangky">Đăng ký</string>
+    <string name="moinhat">Mới Nhất</string>
+    <string name="vietbaimoi">Viết bài mới</string>
+    <string name="dangbai">Đăng bài</string>
+    <string name="tentruyen">Tên truyện</string>
+    <string name="noidung">Nội dung</string>
+    <string name="linkanh">Link hình ảnh</string>
+    <string name="search">Search</string>
+    <string name="timkiem">Tìm kiếm</string>
+</resources>

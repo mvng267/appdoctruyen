@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "380575497088",
+    "firebase_url": "https://appdoctruyen-b7f0a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "appdoctruyen-b7f0a",
+    "storage_bucket": "appdoctruyen-b7f0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380575497088:android:d3f3fa7465f927df451f65",
+        "android_client_info": {
+          "package_name": "com.example.appdoctruyen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0OX0u06KQjj4DAkI0IYuVumPTKgh6Hpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
