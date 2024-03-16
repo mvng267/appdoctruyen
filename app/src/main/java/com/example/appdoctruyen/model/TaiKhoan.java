@@ -1,17 +1,18 @@
 package com.example.appdoctruyen.model;
 
 public class TaiKhoan {
-    private int mId;
+    private String mId;
     private String mTenTaiKhoan;
     private String mMatKhau;
     private String mEmail;
     private int mPhanQuyen;
 
-    public TaiKhoan(String mTenTaiKhoan, String mMatKhau, String mEmail, int mPhanQuyen) {
+    public TaiKhoan(String mTenTaiKhoan, String mMatKhau, String mEmail, int mPhanQuyen, String mId) {
         this.mTenTaiKhoan = mTenTaiKhoan;
         this.mMatKhau = mMatKhau;
         this.mEmail = mEmail;
         this.mPhanQuyen = mPhanQuyen;
+        this.mId = mId;
     }
 
     public TaiKhoan() {
@@ -20,11 +21,12 @@ public class TaiKhoan {
     }
 
 
-    public int getmId() {
+
+    public String getmId() {
         return mId;
     }
 
-    public void setmId(int mId) {
+    public void setmId(String mId) {
         this.mId = mId;
     }
 

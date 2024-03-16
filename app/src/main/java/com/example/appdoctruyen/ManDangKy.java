@@ -13,13 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.appdoctruyen.data.DatabaseDocTruyen;
 import com.example.appdoctruyen.model.TaiKhoan;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ManDangKy extends AppCompatActivity {
 
-
-    EditText edtDKTaiKhoan,edtDKMatKhau,edtDKEmail;
-    Button btnDKDangKy,btnDKDangNhap;
+    EditText edtDKTaiKhoan, edtDKMatKhau, edtDKEmail;
+    Button btnDKDangKy, btnDKDangNhap;
 
     DatabaseDocTruyen databaseDocTruyen;
 
@@ -45,14 +45,15 @@ public class ManDangKy extends AppCompatActivity {
                 } else {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference taiKhoanRef = db.collection("TaiKhoan");
+                    DocumentReference newTaiKhoanRef = taiKhoanRef.document(); // Generate a unique document ID
 
                     taiKhoanRef.whereEqualTo("mTenTaiKhoan", taikhoan)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 if (queryDocumentSnapshots.isEmpty()) {
-                                    TaiKhoan taiKhoanMoi = CreateTaiKhoan();
-                                    taiKhoanRef.add(taiKhoanMoi)
-                                            .addOnSuccessListener(documentReference -> {
+                                    TaiKhoan taiKhoanMoi = CreateTaiKhoan(newTaiKhoanRef.getId()); // Pass the generated ID to the createTaiKhoan method
+                                    newTaiKhoanRef.set(taiKhoanMoi)
+                                            .addOnSuccessListener(aVoid -> {
                                                 Toast.makeText(ManDangKy.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                                                 Log.e("Thông báo: ", "Đăng ký thành công");
                                             })
@@ -71,30 +72,31 @@ public class ManDangKy extends AppCompatActivity {
                 }
             }
         });
+
         btnDKDangNhap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
     }
-    private TaiKhoan CreateTaiKhoan() {
+
+    private TaiKhoan CreateTaiKhoan(String id) {
         String taikhoan = edtDKTaiKhoan.getText().toString();
         String matkhau = edtDKMatKhau.getText().toString();
         String email = edtDKEmail.getText().toString();
         int phanquyen = 1;
 
-        TaiKhoan tk = new TaiKhoan(taikhoan, matkhau, email, phanquyen);
+        TaiKhoan tk = new TaiKhoan(taikhoan, matkhau, email, phanquyen,  id );
         return tk;
     }
+
     @SuppressLint("CutPasteId")
     private void AnhXa() {
-        edtDKEmail = findViewById(R.id.dkMatKhau);
+        edtDKEmail = findViewById(R.id.dkEmail);
         edtDKMatKhau = findViewById(R.id.dkMatKhau);
         edtDKTaiKhoan = findViewById(R.id.dkTaiKhoan);
         btnDKDangKy = findViewById(R.id.dkDangKy);
         btnDKDangNhap = findViewById(R.id.dkDangNhap);
-
     }
 }
