@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appdoctruyen.data.DatabaseDocTruyen;
 import com.example.appdoctruyen.model.TaiKhoan;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ManDangKy extends AppCompatActivity {
 
@@ -33,23 +35,39 @@ public class ManDangKy extends AppCompatActivity {
         btnDKDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 String taikhoan = edtDKTaiKhoan.getText().toString();
                 String matkhau = edtDKMatKhau.getText().toString();
                 String email = edtDKEmail.getText().toString();
 
-                TaiKhoan taikhoan1 = CreateTaiKhoan();
-                if(taikhoan.equals("") || matkhau.equals("") || email.equals("")){
-                    Toast.makeText(ManDangKy.this,"Bạn chưa nhập đầy đủ thông tin",Toast.LENGTH_SHORT).show();
-                    Log.e("Thông báo : ","Bạn chưa nhập đầy đủ thông tin");
-                }
-                //Nếu đầy đủ thông tin
-                else{
-                    //Kiểm tra xem trùng tài khoản không để có thể hiển thị thông báo tài khoản trùng
+                if (taikhoan.isEmpty() || matkhau.isEmpty() || email.isEmpty()) {
+                    Toast.makeText(ManDangKy.this, "Bạn chưa nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                    Log.e("Thông báo: ", "Bạn chưa nhập đầy đủ thông tin");
+                } else {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    CollectionReference taiKhoanRef = db.collection("TaiKhoan");
 
-                    databaseDocTruyen.AddTaiKhoan(taikhoan1);
-                    //Toast.makeText(ManDangKy.this,"Đăng ký thành công ",Toast.LENGTH_SHORT).show();
+                    taiKhoanRef.whereEqualTo("mTenTaiKhoan", taikhoan)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                if (queryDocumentSnapshots.isEmpty()) {
+                                    TaiKhoan taiKhoanMoi = CreateTaiKhoan();
+                                    taiKhoanRef.add(taiKhoanMoi)
+                                            .addOnSuccessListener(documentReference -> {
+                                                Toast.makeText(ManDangKy.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                                                Log.e("Thông báo: ", "Đăng ký thành công");
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(ManDangKy.this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
+                                                Log.e("Truy vấn Firestore", "Lỗi: " + e.getMessage());
+                                            });
+                                } else {
+                                    Toast.makeText(ManDangKy.this, "Tài khoản đã tồn tại", Toast.LENGTH_SHORT).show();
+                                    Log.e("Thông báo: ", "Tài khoản đã tồn tại");
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Truy vấn Firestore", "Lỗi: " + e.getMessage());
+                            });
                 }
             }
         });
@@ -68,13 +86,6 @@ public class ManDangKy extends AppCompatActivity {
         int phanquyen = 1;
 
         TaiKhoan tk = new TaiKhoan(taikhoan, matkhau, email, phanquyen);
-
-        // Tạo một đối tượng FirebaseHelper
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-
-        // Thêm tài khoản vào Firebase Realtime Database
-        firebaseHelper.addTaiKhoan(tk);
-
         return tk;
     }
     @SuppressLint("CutPasteId")
