@@ -9,10 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.appdoctruyen.model.TaiKhoan;
+import com.example.appdoctruyen.model.Users;
 import com.example.appdoctruyen.model.Truyen;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class DatabaseDocTruyen extends SQLiteOpenHelper {
 
@@ -225,15 +223,15 @@ public class DatabaseDocTruyen extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    public void AddTaiKhoan(TaiKhoan taiKhoan){
+    public void AddTaiKhoan(Users users){
         SQLiteDatabase db = this.getWritableDatabase();
 
         //không thể lưu trực tiếp xuống insert nên thông qua contentvalues
         ContentValues values = new ContentValues();
-        values.put(TEN_TAI_KHOAN,taiKhoan.getmTenTaiKhoan());
-        values.put(MAT_KHAU,taiKhoan.getmMatKhau());
-        values.put(EMAIL,taiKhoan.getmEmail());
-        values.put(PHAN_QUYEN,taiKhoan.getmPhanQuyen());
+        values.put(TEN_TAI_KHOAN, users.getUsername());
+        values.put(MAT_KHAU, users.getPass());
+        values.put(EMAIL, users.getEmail());
+        values.put(PHAN_QUYEN, users.getRoles());
 
         db.insert(TABLE_TAIKHOAN,null,values);
         //đóng lại db cho an toàn

@@ -26,7 +26,7 @@ import com.example.appdoctruyen.adapter.adapterchuyenmuc;
 import com.example.appdoctruyen.adapter.adapterthongtin;
 import com.example.appdoctruyen.adapter.adaptertruyen;
 import com.example.appdoctruyen.data.DatabaseDocTruyen;
-import com.example.appdoctruyen.model.TaiKhoan;
+import com.example.appdoctruyen.model.Users;
 import com.example.appdoctruyen.model.Truyen;
 import com.example.appdoctruyen.model.chuyenmuc;
 import com.google.android.material.navigation.NavigationView;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     ArrayList<chuyenmuc> chuyenmucArrayList;
-    ArrayList<TaiKhoan> taiKhoanArrayList;
+    ArrayList<Users> usersArrayList;
 
 
     ArrayList<Truyen> TruyenArrayList;
@@ -193,9 +193,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Thong tin
-        taiKhoanArrayList = new ArrayList<>();
-        taiKhoanArrayList.add(new TaiKhoan());
-        adapterthongtin = new adapterthongtin(this,R.layout.nav_thong_tin,taiKhoanArrayList);
+        usersArrayList = new ArrayList<>();
+        usersArrayList.add(new Users());
+        adapterthongtin = new adapterthongtin(this,R.layout.nav_thong_tin, usersArrayList);
         listviewThongtin.setAdapter(adapterthongtin);
 
         //chuyên mục

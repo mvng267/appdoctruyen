@@ -8,8 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.appdoctruyen.R;
-import com.example.appdoctruyen.model.TaiKhoan;
-import com.example.appdoctruyen.model.chuyenmuc;
+import com.example.appdoctruyen.model.Users;
 
 import java.util.List;
 
@@ -18,17 +17,17 @@ public class adapterthongtin extends BaseAdapter {
     private Context context;
     private int layout;
     //Tạo mảng
-    private List<TaiKhoan> taiKhoanList;
+    private List<Users> usersList;
 
-    public adapterthongtin(Context context, int layout, List<TaiKhoan> taiKhoanList) {
+    public adapterthongtin(Context context, int layout, List<Users> usersList) {
         this.context = context;
         this.layout = layout;
-        this.taiKhoanList = taiKhoanList;
+        this.usersList = usersList;
     }
 
     @Override
     public int getCount() {
-        return taiKhoanList.size();
+        return usersList.size();
     }
 
     @Override
@@ -52,11 +51,11 @@ public class adapterthongtin extends BaseAdapter {
         TextView txtTenTaiKhoan = (TextView) convertView.findViewById(R.id.Text_Name);
         TextView txtGmail = (TextView) convertView.findViewById(R.id.Text_Gmail);
 
-        TaiKhoan taiKhoan = taiKhoanList.get(position);
+        Users users = usersList.get(position);
 
         //Hiển thị lên màn hình
-        txtTenTaiKhoan.setText(taiKhoan.getmTenTaiKhoan());
-        txtGmail.setText(taiKhoan.getmEmail());
+        txtTenTaiKhoan.setText(users.getUsername());
+        txtGmail.setText(users.getEmail());
 
         return convertView;
     }

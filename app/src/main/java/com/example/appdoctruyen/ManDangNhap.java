@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.appdoctruyen.model.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,12 +19,15 @@ public class ManDangNhap extends AppCompatActivity {
 
     private EditText edtTaiKhoan, edtMatKhau;
     private Button btnDangNhap, btnDangKy;
+    private PreferenceHelper preferenceHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_man_dang_nhap);
         AnhXa();
+
+        preferenceHelper = new PreferenceHelper(this); // Khởi tạo PreferenceHelper
 
         btnDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,19 +44,23 @@ public class ManDangNhap extends AppCompatActivity {
                 String matkhau = edtMatKhau.getText().toString();
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                CollectionReference taiKhoanRef = db.collection("TaiKhoan");
+                CollectionReference taiKhoanRef = db.collection("Users");
 
-                taiKhoanRef.whereEqualTo("mTenTaiKhoan", tentaikhoan)
-                        .whereEqualTo("mMatKhau", matkhau)
+                taiKhoanRef.whereEqualTo("username", tentaikhoan)
+                        .whereEqualTo("password", matkhau)
                         .get()
                         .addOnSuccessListener(queryDocumentSnapshots -> {
                             if (!queryDocumentSnapshots.isEmpty()) {
                                 DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
 
-                                String tentk = documentSnapshot.getString("mTenTaiKhoan");
-                                String email = documentSnapshot.getString("mEmail");
-                                int phanquyen = documentSnapshot.getLong("mPhanQuyen").intValue();
+                                String tentk = documentSnapshot.getString("username");
+                                String email = documentSnapshot.getString("email");
+                                int phanquyen = documentSnapshot.getLong("role").intValue();
                                 String docId = documentSnapshot.getId();
+
+                                // Lưu dữ liệu vào PreferenceHelper
+                                preferenceHelper.setUserId(docId);
+                                preferenceHelper.setEmail(email);
 
                                 Intent intent = new Intent(ManDangNhap.this, MainActivity.class);
                                 intent.putExtra("phanq", phanquyen);
@@ -62,7 +70,7 @@ public class ManDangNhap extends AppCompatActivity {
 
                                 startActivity(intent);
                                 Log.e("Đăng nhập: ", "Thành công");
-                                Toast.makeText(ManDangNhap.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ManDangNhap.this, "Đăng nhập thành công id" + docId, Toast.LENGTH_SHORT).show();
                             } else {
                                 Log.e("Đăng nhập: ", "Không thành công");
                                 Toast.makeText(ManDangNhap.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();

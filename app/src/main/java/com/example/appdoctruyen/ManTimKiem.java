@@ -106,7 +106,7 @@ public class ManTimKiem extends AppCompatActivity {
                 filteredList.add(item);
 
                 //Thêm dữ liệu để hiển thị ra item nội dung
-               arrayList.add(item);
+                arrayList.add(item);
             }
         }
         adaptertruyen.filterList(filteredList);

@@ -10,8 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appdoctruyen.data.DatabaseDocTruyen;
-import com.example.appdoctruyen.model.TaiKhoan;
+import com.example.appdoctruyen.model.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,16 +20,12 @@ public class ManDangKy extends AppCompatActivity {
     EditText edtDKTaiKhoan, edtDKMatKhau, edtDKEmail;
     Button btnDKDangKy, btnDKDangNhap;
 
-    DatabaseDocTruyen databaseDocTruyen;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_man_dang_ky);
 
         AnhXa();
-
-        databaseDocTruyen = new DatabaseDocTruyen(this);
 
         btnDKDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,15 +39,15 @@ public class ManDangKy extends AppCompatActivity {
                     Log.e("Thông báo: ", "Bạn chưa nhập đầy đủ thông tin");
                 } else {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    CollectionReference taiKhoanRef = db.collection("TaiKhoan");
+                    CollectionReference taiKhoanRef = db.collection("Users");
                     DocumentReference newTaiKhoanRef = taiKhoanRef.document(); // Generate a unique document ID
 
-                    taiKhoanRef.whereEqualTo("mTenTaiKhoan", taikhoan)
+                    taiKhoanRef.whereEqualTo("username", taikhoan)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 if (queryDocumentSnapshots.isEmpty()) {
-                                    TaiKhoan taiKhoanMoi = CreateTaiKhoan(newTaiKhoanRef.getId()); // Pass the generated ID to the createTaiKhoan method
-                                    newTaiKhoanRef.set(taiKhoanMoi)
+                                    User userMoi = CreateTaiKhoan(newTaiKhoanRef.getId()); // Pass the generated ID to the createTaiKhoan method
+                                    newTaiKhoanRef.set(userMoi)
                                             .addOnSuccessListener(aVoid -> {
                                                 Toast.makeText(ManDangKy.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                                                 Log.e("Thông báo: ", "Đăng ký thành công");
@@ -81,14 +76,14 @@ public class ManDangKy extends AppCompatActivity {
         });
     }
 
-    private TaiKhoan CreateTaiKhoan(String id) {
+    private User CreateTaiKhoan(String id) {
         String taikhoan = edtDKTaiKhoan.getText().toString();
         String matkhau = edtDKMatKhau.getText().toString();
         String email = edtDKEmail.getText().toString();
-        int phanquyen = 1;
+        int role = 1;
 
-        TaiKhoan tk = new TaiKhoan(taikhoan, matkhau, email, phanquyen,  id );
-        return tk;
+        User user = new User(taikhoan, matkhau, email, role, id);
+        return user;
     }
 
     @SuppressLint("CutPasteId")

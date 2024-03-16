@@ -1,5 +1,7 @@
 package com.example.appdoctruyen;
 
+import static android.widget.Toast.makeText;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -8,9 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appdoctruyen.model.TruyenFirebase;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.appdoctruyen.model.Commics;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -19,7 +19,7 @@ public class ManDangBai extends AppCompatActivity {
     EditText edtTieuDe, edtNoiDung, edtAnh;
     Button btnDangBai;
     FirebaseFirestore db;
-    FirebaseAuth auth;
+    PreferenceHelper preferenceHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class ManDangBai extends AppCompatActivity {
         edtAnh = findViewById(R.id.dbimg);
 
         db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
+        preferenceHelper = new PreferenceHelper(this);
 
         btnDangBai.setOnClickListener(v -> {
             String tentruyen = edtTieuDe.getText().toString();
@@ -40,35 +40,39 @@ public class ManDangBai extends AppCompatActivity {
             String img = edtAnh.getText().toString();
 
             if (tentruyen.isEmpty() || noidung.isEmpty() || img.isEmpty()) {
-                Toast.makeText(ManDangBai.this, "Yêu cầu nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                makeText(ManDangBai.this, "Yêu cầu nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             } else {
-                TruyenFirebase truyen = createTruyen(tentruyen, noidung, img);
+                Commics truyen = createCommics(tentruyen, noidung, img);
 
-                FirebaseUser currentUser = auth.getCurrentUser();
-                if (currentUser != null) {
-                    String userId = currentUser.getUid();
-                    truyen.setTaiKhoanId(userId);
+                String userId = preferenceHelper.getUserId();
+                truyen.setUserID(userId);
 
-                    CollectionReference truyenRef = db.collection("Truyen");
-                    truyenRef.add(truyen)
-                            .addOnSuccessListener(documentReference -> {
-                                Toast.makeText(ManDangBai.this, "Thêm truyện thành công", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(ManDangBai.this, ManAdmin.class);
-                                startActivity(intent);
-                                finish();
-                            })
-                            .addOnFailureListener(e -> Toast.makeText(ManDangBai.this, "Thêm truyện thất bại", Toast.LENGTH_SHORT).show());
-                } else {
-                    Toast.makeText(ManDangBai.this, "Lỗi: Không thể lấy ID của tài khoản", Toast.LENGTH_SHORT).show();
-                }
+                CollectionReference truyenRef = db.collection("Commics");
+                truyenRef.add(truyen)
+                        .addOnSuccessListener(documentReference -> {
+                            // Lấy ID của bài viết từ Firebase
+                            String truyenId = documentReference.getId();
+
+                            // Cập nhật dữ liệu lên Firebase
+                            truyenRef.document(truyenId)
+                                    .update("tittle", tentruyen,
+                                            "content", noidung,
+                                            "img", img,
+                                            "userID", userId, "id",truyenId)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(ManDangBai.this, "đăng bài thành công id: "+ truyenId , Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(ManDangBai.this, ManAdmin.class);
+                                        startActivity(intent);
+                                        finish();
+                                    })
+                                    .addOnFailureListener(e -> makeText(ManDangBai.this, "Cập nhật dữ liệu thất bại", Toast.LENGTH_SHORT).show());
+                        })
+                        .addOnFailureListener(e -> makeText(ManDangBai.this, "Thêm truyện thất bại", Toast.LENGTH_SHORT).show());
             }
         });
     }
 
-    private TruyenFirebase createTruyen(String tentruyen, String noidung, String img) {
-        Intent intent = getIntent();
-        int id = intent.getIntExtra("Id", 0);
-
-        return new TruyenFirebase(tentruyen, noidung, img, id);
+    private Commics createCommics(String tittle, String content, String img) {
+        return new Commics(tittle, content, img);
     }
 }
