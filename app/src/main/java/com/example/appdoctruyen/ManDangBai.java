@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appdoctruyen.model.Commics;
+import com.example.appdoctruyen.model.Comics;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -49,12 +49,12 @@ public class ManDangBai extends AppCompatActivity {
             if (tentruyen.isEmpty() || noidung.isEmpty() || img.isEmpty()) {
                 Toast.makeText(ManDangBai.this, "Yêu cầu nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             } else {
-                Commics truyen = createCommics(tentruyen, noidung, img);
+                Comics truyen = createCommics(tentruyen, noidung, img);
 
                 String userId = preferenceHelper.getUserId();
                 truyen.setUserID(userId);
 
-                CollectionReference truyenRef = db.collection("Commics");
+                CollectionReference truyenRef = db.collection("Comics");
                 truyenRef.add(truyen)
                         .addOnSuccessListener(documentReference -> {
                             // Lấy ID của bài viết từ Firebase
@@ -79,8 +79,8 @@ public class ManDangBai extends AppCompatActivity {
         });
     }
 
-    private Commics createCommics(String tittle, String content, String img) {
-        return new Commics(tittle, content, img);
+    private Comics createCommics(String tittle, String content, String img) {
+        return new Comics(tittle, content, img);
     }
 
     // Kiểm tra kết nối Internet

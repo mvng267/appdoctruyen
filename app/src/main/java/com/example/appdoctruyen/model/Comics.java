@@ -1,23 +1,23 @@
 package com.example.appdoctruyen.model;
 
-public class Commics {
+public class Comics {
     private String tittle;
     private String content;
     private String img;
     private int id;
     private String userID;
 
-    public Commics() {
+    public Comics() {
         // Constructor mặc định được yêu cầu khi sử dụng với Firebase Firestore
     }
 
-    public Commics(String tittle, String content, String img) {
+    public Comics(String tittle, String content, String img) {
         this.tittle = tittle;
         this.content = content;
         this.img = img;
     }
 
-    public Commics(String tittle, String content, String img, String userID) {
+    public Comics(String tittle, String content, String img, String userID) {
         this.tittle = tittle;
         this.content = content;
         this.img = img;
