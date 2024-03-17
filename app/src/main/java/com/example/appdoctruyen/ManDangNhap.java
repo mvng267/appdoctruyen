@@ -1,14 +1,17 @@
 package com.example.appdoctruyen;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appdoctruyen.model.User;
 import com.google.firebase.firestore.CollectionReference;
@@ -40,6 +43,12 @@ public class ManDangNhap extends AppCompatActivity {
         btnDangNhap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Kiểm tra kết nối Internet
+                if (!isInternetConnected()) {
+                    Toast.makeText(ManDangNhap.this, "Không có kết nối Internet", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String tentaikhoan = edtTaiKhoan.getText().toString();
                 String matkhau = edtMatKhau.getText().toString();
 
@@ -79,6 +88,7 @@ public class ManDangNhap extends AppCompatActivity {
                         .addOnFailureListener(e -> {
                             // Xử lý lỗi
                             Log.e("Truy vấn Firestore", "Lỗi: " + e.getMessage());
+                            Toast.makeText(ManDangNhap.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                         });
             }
         });
@@ -89,5 +99,11 @@ public class ManDangNhap extends AppCompatActivity {
         edtMatKhau = findViewById(R.id.matkhau);
         btnDangNhap = findViewById(R.id.dangnhap);
         btnDangKy = findViewById(R.id.dangky);
+    }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

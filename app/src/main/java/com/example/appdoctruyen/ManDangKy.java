@@ -1,6 +1,10 @@
 package com.example.appdoctruyen;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +34,12 @@ public class ManDangKy extends AppCompatActivity {
         btnDKDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Kiểm tra kết nối Internet
+                if (!isInternetConnected()) {
+                    Toast.makeText(ManDangKy.this, "Không có kết nối Internet", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String taikhoan = edtDKTaiKhoan.getText().toString();
                 String matkhau = edtDKMatKhau.getText().toString();
                 String email = edtDKEmail.getText().toString();
@@ -62,8 +72,10 @@ public class ManDangKy extends AppCompatActivity {
                                 }
                             })
                             .addOnFailureListener(e -> {
+                                Toast.makeText(ManDangKy.this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
                                 Log.e("Truy vấn Firestore", "Lỗi: " + e.getMessage());
                             });
+
                 }
             }
         });
@@ -93,5 +105,11 @@ public class ManDangKy extends AppCompatActivity {
         edtDKTaiKhoan = findViewById(R.id.dkTaiKhoan);
         btnDKDangKy = findViewById(R.id.dkDangKy);
         btnDKDangNhap = findViewById(R.id.dkDangNhap);
+    }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

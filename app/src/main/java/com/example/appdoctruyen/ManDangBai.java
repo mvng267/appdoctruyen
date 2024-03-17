@@ -1,8 +1,9 @@
 package com.example.appdoctruyen;
 
-import static android.widget.Toast.makeText;
-
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,12 +36,18 @@ public class ManDangBai extends AppCompatActivity {
         preferenceHelper = new PreferenceHelper(this);
 
         btnDangBai.setOnClickListener(v -> {
+            // Kiểm tra kết nối Internet
+            if (!isInternetConnected()) {
+                Toast.makeText(ManDangBai.this, "Không có kết nối Internet", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String tentruyen = edtTieuDe.getText().toString();
             String noidung = edtNoiDung.getText().toString();
             String img = edtAnh.getText().toString();
 
             if (tentruyen.isEmpty() || noidung.isEmpty() || img.isEmpty()) {
-                makeText(ManDangBai.this, "Yêu cầu nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ManDangBai.this, "Yêu cầu nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             } else {
                 Commics truyen = createCommics(tentruyen, noidung, img);
 
@@ -58,21 +65,31 @@ public class ManDangBai extends AppCompatActivity {
                                     .update("tittle", tentruyen,
                                             "content", noidung,
                                             "img", img,
-                                            "userID", userId, "id",truyenId)
+                                            "userID", userId, "id", truyenId)
                                     .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(ManDangBai.this, "đăng bài thành công id: "+ truyenId , Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ManDangBai.this, "Đăng bài thành công id: " + truyenId, Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(ManDangBai.this, ManAdmin.class);
                                         startActivity(intent);
                                         finish();
                                     })
-                                    .addOnFailureListener(e -> makeText(ManDangBai.this, "Cập nhật dữ liệu thất bại", Toast.LENGTH_SHORT).show());
+                                    .addOnFailureListener(e -> Toast.makeText(ManDangBai.this, "Cập nhật dữ liệu thất bại", Toast.LENGTH_SHORT).show());
                         })
-                        .addOnFailureListener(e -> makeText(ManDangBai.this, "Thêm truyện thất bại", Toast.LENGTH_SHORT).show());
+                        .addOnFailureListener(e -> Toast.makeText(ManDangBai.this, "Thêm truyện thất bại", Toast.LENGTH_SHORT).show());
             }
         });
     }
 
     private Commics createCommics(String tittle, String content, String img) {
         return new Commics(tittle, content, img);
+    }
+
+    // Kiểm tra kết nối Internet
+    private boolean isInternetConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            return networkInfo != null && networkInfo.isConnected();
+        }
+        return false;
     }
 }
