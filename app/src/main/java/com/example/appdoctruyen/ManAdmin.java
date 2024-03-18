@@ -2,17 +2,19 @@ package com.example.appdoctruyen;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appdoctruyen.adapter.adaptertruyen;
-import com.example.appdoctruyen.data.DatabaseDocTruyen;
-import com.example.appdoctruyen.model.Truyen;
+import com.example.appdoctruyen.adapter.NewAdapterComics;
+import com.example.appdoctruyen.model.Comics;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -21,9 +23,9 @@ public class ManAdmin extends AppCompatActivity {
     ListView listView;
     Button buttonThem;
 
-    ArrayList<Truyen> TruyenArrayList;
-    adaptertruyen adaptertruyen;
-    DatabaseDocTruyen databaseDocTruyen;
+    private ArrayList<Comics> comicsArrayList;
+    private NewAdapterComics newAdapterComics;
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,72 +35,83 @@ public class ManAdmin extends AppCompatActivity {
         listView = findViewById(R.id.listviewAdmin);
         buttonThem = findViewById(R.id.buttonAddTruyen);
 
+        firestore = FirebaseFirestore.getInstance();
+
         initList();
         listView.setOnItemLongClickListener((parent, view, position, id) -> {
             DialogDelete(position);
             return false;
         });
 
-
         buttonThem.setOnClickListener(v -> {
-
             Intent intent = getIntent();
-            int id = intent.getIntExtra("Id",0);
+            String id = intent.getStringExtra("Id");
             Intent intent1 = new Intent(ManAdmin.this, ManDangBai.class);
-            intent.putExtra("Id",id);
+            intent1.putExtra("Id", id);
             startActivity(intent1);
         });
     }
-    //Dialog Delete
+
+    // Dialog Delete
     private void DialogDelete(int position) {
-
-        //Tạo đối tượng cửa sổ dialog
-        Dialog dialog  =  new Dialog(this);
-
-        //Nạp layout vào
+        // Tạo đối tượng cửa sổ dialog
+        Dialog dialog = new Dialog(this);
+        // Nạp layout vào
         dialog.setContentView(R.layout.dialogdelete);
-        //Click No mới thoát, click ngoài ko thoát
+        // Click No mới thoát, click ngoài không thoát
         dialog.setCanceledOnTouchOutside(false);
 
-        //Ánh xạ
+        // Ánh xạ
         Button btnYes = dialog.findViewById(R.id.buttonYes);
         Button btnNo = dialog.findViewById(R.id.buttonNo);
 
         btnYes.setOnClickListener(v -> {
-            int idtruyen = TruyenArrayList.get(position).getID();
-            //Xóa trong SQL
-            databaseDocTruyen.Delete(idtruyen);
-            //Cập nhật lại listview
-            Intent intent = new Intent(ManAdmin.this,ManAdmin.class);
-            finish();
-            startActivity(intent);
-            Toast.makeText(ManAdmin.this,"Xóa truyện thành công",Toast.LENGTH_SHORT).show();
+            String idTruyen = comicsArrayList.get(position).getId();
+
+            // Xóa bản ghi trên Firebase Firestore
+            CollectionReference comicsRef = firestore.collection("Comics");
+            comicsRef.document(idTruyen).delete()
+                    .addOnSuccessListener(aVoid -> {
+                        // Xóa thành công, cập nhật lại ListView
+                        comicsArrayList.remove(position);
+                        newAdapterComics.notifyDataSetChanged();
+                        Toast.makeText(ManAdmin.this, "Xóa truyện thành công", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        // Xóa thất bại
+                        Toast.makeText(ManAdmin.this, "Lỗi khi xóa truyện", Toast.LENGTH_SHORT).show();
+                    });
+
+            dialog.dismiss();
         });
+
         btnNo.setOnClickListener(v -> dialog.cancel());
         dialog.show();
     }
 
+    // Gán dữ liệu vào ListView
+    public void initList() {
+        comicsArrayList = new ArrayList<>();
 
-    //Gán DL vào listview
-    public void initList(){
-        TruyenArrayList = new ArrayList<>();
-        databaseDocTruyen = new DatabaseDocTruyen(this);
+        CollectionReference comicsRef = firestore.collection("Comics");
+        comicsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                String id = documentSnapshot.getId();
+                String content = documentSnapshot.getString("content");
+                String img = documentSnapshot.getString("img");
+                String title = documentSnapshot.getString("title");
+                String userID = documentSnapshot.getString("userID");
+                Log.d("debug Firestore", "ID: " + id + ", Title: " + title + ", Content: " + img);
 
-        Cursor cursor1 = databaseDocTruyen.getData2();
+                comicsArrayList.add(new Comics(id, content, img, title, userID));
+            }
 
-        while (cursor1.moveToNext()){
+            newAdapterComics = new NewAdapterComics(ManAdmin.this, comicsArrayList);
+            listView.setAdapter(newAdapterComics);
 
-            int id = cursor1.getInt(0);
-            String tentruyen = cursor1.getString(1);
-            String noidung = cursor1.getString(2);
-            String anh = cursor1.getString(3);
-            int id_tk = cursor1.getInt(4);
-            TruyenArrayList.add(new Truyen(id,tentruyen,noidung,anh,id_tk));
-
-            adaptertruyen = new adaptertruyen(getApplicationContext(),TruyenArrayList);
-            listView.setAdapter(adaptertruyen);
-        }
-        cursor1.moveToFirst();
-        cursor1.close();
+            Toast.makeText(ManAdmin.this, "Tải dữ liệu thành công", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(ManAdmin.this, "Lỗi khi tải dữ liệu từ Firestore", Toast.LENGTH_SHORT).show();
+        });
     }
 }
