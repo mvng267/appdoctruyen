@@ -17,6 +17,7 @@
         android:theme="@style/Theme.AppDocTruyen">
 
         <activity android:name=".ManAdmin" android:exported="true" />
+        <activity android:name=".NewHome" android:exported="true"/>
         <activity android:name=".ManNoiDungTruyen" android:exported="true" />
         <activity android:name=".ManDangBai" android:exported="true" />
         <activity android:name=".ManTimKiem" android:exported="true" />

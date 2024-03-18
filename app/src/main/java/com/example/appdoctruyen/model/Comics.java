@@ -1,63 +1,61 @@
 package com.example.appdoctruyen.model;
 
 public class Comics {
-    private String tittle;
+    private String id;
     private String content;
     private String img;
-    private int id;
+    private String title;
     private String userID;
 
     public Comics() {
-        // Constructor mặc định được yêu cầu khi sử dụng với Firebase Firestore
+        // Empty constructor required for Firestore
     }
 
-    public Comics(String tittle, String content, String img) {
-        this.tittle = tittle;
+    public Comics(String id, String content, String img, String title, String userID) {
+        this.id = id;
         this.content = content;
         this.img = img;
-    }
-
-    public Comics(String tittle, String content, String img, String userID) {
-        this.tittle = tittle;
-        this.content = content;
-        this.img = img;
+        this.title = title;
         this.userID = userID;
     }
 
-    public String getTittle() {
-        return tittle;
+    public Comics(String title, String content, String img) {
     }
 
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
+    public String getId() {
+        return id;
     }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getImg() {
         return img;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setImg(String img) {
         this.img = img;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getUserID() {
-        return userID;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setUserID(String userID) {
