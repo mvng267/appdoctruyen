@@ -22,6 +22,10 @@ public class Comics {
     public Comics(String title, String content, String img) {
     }
 
+    public String getImage() {
+        return img;
+    }
+
     public String getId() {
         return id;
     }

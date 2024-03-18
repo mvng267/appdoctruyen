@@ -62,13 +62,13 @@ public class ManDangBai extends AppCompatActivity {
 
                             // Cập nhật dữ liệu lên Firebase
                             truyenRef.document(truyenId)
-                                    .update("tittle", tentruyen,
+                                    .update("title", tentruyen,
                                             "content", noidung,
                                             "img", img,
                                             "userID", userId, "id", truyenId)
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(ManDangBai.this, "Đăng bài thành công id: " + truyenId, Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(ManDangBai.this, ManAdmin.class);
+                                        Intent intent = new Intent(ManDangBai.this, MenuActivity.class);
                                         startActivity(intent);
                                         finish();
                                     })

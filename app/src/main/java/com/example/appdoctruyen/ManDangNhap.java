@@ -70,16 +70,22 @@ public class ManDangNhap extends AppCompatActivity {
                                 // Lưu dữ liệu vào PreferenceHelper
                                 preferenceHelper.setUserId(docId);
                                 preferenceHelper.setEmail(email);
+                                preferenceHelper.setUsername(tentk);
 
-                                Intent intent = new Intent(ManDangNhap.this, MainActivity.class);
-                                intent.putExtra("phanq", phanquyen);
-                                intent.putExtra("idd", docId);
-                                intent.putExtra("email", email);
-                                intent.putExtra("tentaikhoan", tentk);
-
-                                startActivity(intent);
-                                Log.e("Đăng nhập: ", "Thành công");
-                                Toast.makeText(ManDangNhap.this, "Đăng nhập thành công id" + docId, Toast.LENGTH_SHORT).show();
+                                if (docId != null) {
+                                    Intent intent = new Intent(ManDangNhap.this, NewHome.class);
+                                    intent.putExtra("phanq", phanquyen);
+                                    intent.putExtra("idd", docId);
+                                    intent.putExtra("email", email);
+                                    intent.putExtra("tentaikhoan", tentk);
+                                    startActivity(intent);
+                                    Log.e("Đăng nhập: ", "Thành công");
+                                    Toast.makeText(ManDangNhap.this, "Đăng nhập thành công id" + docId, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.e("Đăng nhập: ", "Không thành công");
+                                    Toast.makeText(ManDangNhap.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                                    btnDangNhap.setEnabled(false); // Vô hiệu hóa nút đăng nhập
+                                }
                             } else {
                                 Log.e("Đăng nhập: ", "Không thành công");
                                 Toast.makeText(ManDangNhap.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
@@ -94,6 +100,16 @@ public class ManDangNhap extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (preferenceHelper.getUserId() == null) {
+            // Không cho phép quay lại nếu docId là null
+            Toast.makeText(this, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void AnhXa() {
         edtTaiKhoan = findViewById(R.id.taikhoan);
         edtMatKhau = findViewById(R.id.matkhau);
@@ -104,6 +120,6 @@ public class ManDangNhap extends AppCompatActivity {
     private boolean isInternetConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+        return networkInfo!= null && networkInfo.isConnected();
     }
 }

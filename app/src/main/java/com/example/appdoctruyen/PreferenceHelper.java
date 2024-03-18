@@ -78,4 +78,9 @@ public class PreferenceHelper {
         editor.putString(PREF_EMAIL, email);
         editor.apply();
     }
+
+    public void clear() {
+        editor.clear();
+        editor.apply();
+    }
 }

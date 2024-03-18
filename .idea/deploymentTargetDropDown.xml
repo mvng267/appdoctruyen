@@ -2,11 +2,43 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="AccountActivity">
+        <State />
+      </entry>
       <entry key="NewHome">
         <State />
       </entry>
+      <entry key="UserListActivity">
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="SERIAL_NUMBER" />
+                  <value value="cabfb017" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-03-18T19:17:02.338824Z" />
+        </State>
+      </entry>
       <entry key="app">
-        <State />
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\mvng2\.android\avd\Pixel_6a_API_33.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-03-18T20:11:15.476632800Z" />
+        </State>
       </entry>
     </value>
   </component>
