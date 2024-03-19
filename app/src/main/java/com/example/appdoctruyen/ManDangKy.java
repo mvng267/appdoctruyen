@@ -92,7 +92,7 @@ public class ManDangKy extends AppCompatActivity {
         String taikhoan = edtDKTaiKhoan.getText().toString();
         String matkhau = edtDKMatKhau.getText().toString();
         String email = edtDKEmail.getText().toString();
-        int role = 1;
+        int role = 2;
 
         User user = new User(taikhoan, matkhau, email, role, id);
         return user;

@@ -57,20 +57,6 @@ public class NewAdapterComics extends ArrayAdapter<Comics> {
         // Sử dụng Picasso để tải và hiển thị ảnh từ URL
         Picasso.get().load(comics.getImg()).placeholder(R.drawable.ic_baseline_cloud_download_24).error(R.drawable.ic_baseline_image_not_supported_24).into(viewHolder.imageView);
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Xử lý sự kiện khi người dùng nhấp vào mục trong ListView
-                String comicsId = comics.getId();
-
-                // Chuyển sang trang khác với ID tương ứng
-                Intent intent = new Intent(mContext, ManNoiDungTruyen.class);
-                intent.putExtra("comicsId", comicsId);
-                mContext.startActivity(intent);
-                Log.e("commic ID", "onClick: in ra ID bài viết " + comicsId );
-            }
-        });
-
         return convertView;
     }
 

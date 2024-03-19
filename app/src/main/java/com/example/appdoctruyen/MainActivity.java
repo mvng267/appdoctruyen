@@ -99,10 +99,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.e("Đăng bài : ","Bạn không có quyền ");
                         }
                     }
-                else if(position == 1){
-                    Intent intent = new Intent(MainActivity.this,ManThongTinApp.class);
-                    startActivity(intent);
-                }
+
                 else if(position == 2){
                     finish();
                 }

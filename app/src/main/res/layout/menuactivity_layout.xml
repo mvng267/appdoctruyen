@@ -71,7 +71,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:text="Đăng xuất khỏi thế giới"
+        android:text="Đăng xuất"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
