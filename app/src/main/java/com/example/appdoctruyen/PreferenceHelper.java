@@ -20,6 +20,7 @@ public class PreferenceHelper {
         editor = sharedPreferences.edit();
     }
 
+
     public void setUsername(String username) {
         editor.putString(KEY_USERNAME, username);
         editor.apply();

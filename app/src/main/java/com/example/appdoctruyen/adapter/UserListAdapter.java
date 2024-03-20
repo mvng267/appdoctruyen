@@ -30,7 +30,6 @@ public class UserListAdapter extends ArrayAdapter<Users> {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_user, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.textViewId = convertView.findViewById(R.id.textview_id);
             viewHolder.textViewEmail = convertView.findViewById(R.id.textview_Email);
             viewHolder.textViewRole = convertView.findViewById(R.id.textview_role);
             viewHolder.textViewUsername = convertView.findViewById(R.id.textview_username);
@@ -41,7 +40,6 @@ public class UserListAdapter extends ArrayAdapter<Users> {
 
         Users user = mUsersList.get(position);
 
-        viewHolder.textViewId.setText(user.getID());
         viewHolder.textViewUsername.setText(user.getUsername());
         viewHolder.textViewEmail.setText(user.getEmail());
 
@@ -57,7 +55,6 @@ public class UserListAdapter extends ArrayAdapter<Users> {
 
     static class ViewHolder {
         TextView textViewEmail;
-        TextView textViewId;
         TextView textViewRole;
         TextView textViewUsername;
     }

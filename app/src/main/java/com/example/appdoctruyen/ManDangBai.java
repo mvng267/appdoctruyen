@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,7 +30,63 @@ public class ManDangBai extends AppCompatActivity {
         setContentView(R.layout.activity_man_dang_bai);
 
         edtTieuDe = findViewById(R.id.dbtieude);
+        edtTieuDe.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString().trim();
+                String[] words = text.split("\\s+");
+
+                if (words.length > 30) {
+                    int lastIndex = text.lastIndexOf(" ");
+                    if (lastIndex != -1) {
+                        s.delete(lastIndex, text.length());
+                    } else {
+                        s.clear();
+                    }
+
+                    Toast.makeText(ManDangBai.this, "Vượt quá giới hạn 30 từ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         edtNoiDung = findViewById(R.id.dbnoidung);
+        edtNoiDung.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString().trim();
+                String[] words = text.split("\\s+");
+
+                if (words.length > 100) {
+                    int lastIndex = text.lastIndexOf(" ");
+                    if (lastIndex != -1) {
+                        s.delete(lastIndex, text.length());
+                    } else {
+                        s.clear();
+                    }
+
+                    Toast.makeText(ManDangBai.this, "Vượt quá giới hạn 100 từ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         btnDangBai = findViewById(R.id.dbdangbai);
         edtAnh = findViewById(R.id.dbimg);
 

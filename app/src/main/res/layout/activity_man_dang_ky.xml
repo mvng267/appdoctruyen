@@ -7,9 +7,15 @@
     android:orientation="vertical"
     tools:context=".ManDangKy">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/group_3"/>
+
     <TextView
         android:textColor="#4CAF50"
-        android:layout_marginTop="100dp"
         android:textSize="40sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"

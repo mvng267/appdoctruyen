@@ -26,12 +26,15 @@ public class ManAdmin extends AppCompatActivity {
     private ArrayList<Comics> comicsArrayList;
     private NewAdapterComics newAdapterComics;
     private FirebaseFirestore firestore;
+    private PreferenceHelper preferenceHelper;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_man_admin);
-
+        preferenceHelper = new PreferenceHelper(this);
         listView = findViewById(R.id.listviewAdmin);
         buttonThem = findViewById(R.id.buttonAddTruyen);
 
@@ -39,7 +42,6 @@ public class ManAdmin extends AppCompatActivity {
 
         initList();
         listView.setOnItemLongClickListener((parent, view, position, id) -> {
-            DialogDelete(position);
             return false;
         });
 
@@ -52,47 +54,11 @@ public class ManAdmin extends AppCompatActivity {
         });
     }
 
-    // Dialog Delete
-    private void DialogDelete(int position) {
-        // Tạo đối tượng cửa sổ dialog
-        Dialog dialog = new Dialog(this);
-        // Nạp layout vào
-        dialog.setContentView(R.layout.dialogdelete);
-        // Click No mới thoát, click ngoài không thoát
-        dialog.setCanceledOnTouchOutside(false);
-
-        // Ánh xạ
-        Button btnYes = dialog.findViewById(R.id.buttonYes);
-        Button btnNo = dialog.findViewById(R.id.buttonNo);
-
-        btnYes.setOnClickListener(v -> {
-            String idTruyen = comicsArrayList.get(position).getId();
-
-            // Xóa bản ghi trên Firebase Firestore
-            CollectionReference comicsRef = firestore.collection("Comics");
-            comicsRef.document(idTruyen).delete()
-                    .addOnSuccessListener(aVoid -> {
-                        // Xóa thành công, cập nhật lại ListView
-                        comicsArrayList.remove(position);
-                        newAdapterComics.notifyDataSetChanged();
-                        Toast.makeText(ManAdmin.this, "Xóa truyện thành công", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        // Xóa thất bại
-                        Toast.makeText(ManAdmin.this, "Lỗi khi xóa truyện", Toast.LENGTH_SHORT).show();
-                    });
-
-            dialog.dismiss();
-        });
-
-        btnNo.setOnClickListener(v -> dialog.cancel());
-        dialog.show();
-    }
-
     // Gán dữ liệu vào ListView
     public void initList() {
         comicsArrayList = new ArrayList<>();
 
+        String userID = preferenceHelper.getUserId();
         CollectionReference comicsRef = firestore.collection("Comics");
         comicsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
@@ -100,10 +66,13 @@ public class ManAdmin extends AppCompatActivity {
                 String content = documentSnapshot.getString("content");
                 String img = documentSnapshot.getString("img");
                 String title = documentSnapshot.getString("title");
-                String userID = documentSnapshot.getString("userID");
-                Log.d("debug Firestore", "ID: " + id + ", Title: " + title + ", Content: " + img);
+                String documentUserID = documentSnapshot.getString("userID"); // Lấy giá trị userID từ Firestore
 
-                comicsArrayList.add(new Comics(id, content, img, title, userID));
+                if (userID.equals(documentUserID)) { // Kiểm tra trùng lặp giữa userID và documentUserID
+                    Log.d("debug Firestore", "ID: " + id + ", Title: " + title + ", Content: " + img);
+
+                    comicsArrayList.add(new Comics(id, content, img, title, userID));
+                }
             }
 
             newAdapterComics = new NewAdapterComics(ManAdmin.this, comicsArrayList);

@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,7 +41,6 @@ public class ManDangKy extends AppCompatActivity {
                     Toast.makeText(ManDangKy.this, "Không có kết nối Internet", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 String taikhoan = edtDKTaiKhoan.getText().toString();
                 String matkhau = edtDKMatKhau.getText().toString();
                 String email = edtDKEmail.getText().toString();
@@ -47,7 +48,27 @@ public class ManDangKy extends AppCompatActivity {
                 if (taikhoan.isEmpty() || matkhau.isEmpty() || email.isEmpty()) {
                     Toast.makeText(ManDangKy.this, "Bạn chưa nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                     Log.e("Thông báo: ", "Bạn chưa nhập đầy đủ thông tin");
-                } else {
+                    return;
+                }
+
+                // Kiểm tra tính hợp lệ của username
+                if (!isValidUsername(taikhoan)) {
+                    Toast.makeText(ManDangKy.this, "Username không hợp lệ", Toast.LENGTH_SHORT).show();
+                    Log.e("Thông báo: ", "Username không hợp lệ");
+                    return;
+                }
+                if (matkhau.length() < 8) {
+                    Toast.makeText(ManDangKy.this, "Mật khẩu phải có ít nhất 8 ký tự", Toast.LENGTH_SHORT).show();
+                    Log.e("Thông báo: ", "Mật khẩu phải có ít nhất 8 ký tự");
+                    return;
+                }
+                // Kiểm tra tính hợp lệ của email
+                if (!isValidEmail(email)) {
+                    Toast.makeText(ManDangKy.this, "Email không hợp lệ", Toast.LENGTH_SHORT).show();
+                    Log.e("Thông báo: ", "Email không hợp lệ");
+                    return;
+                }
+
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference taiKhoanRef = db.collection("Users");
                     DocumentReference newTaiKhoanRef = taiKhoanRef.document(); // Generate a unique document ID
@@ -76,7 +97,7 @@ public class ManDangKy extends AppCompatActivity {
                                 Log.e("Truy vấn Firestore", "Lỗi: " + e.getMessage());
                             });
 
-                }
+
             }
         });
 
@@ -92,7 +113,7 @@ public class ManDangKy extends AppCompatActivity {
         String taikhoan = edtDKTaiKhoan.getText().toString();
         String matkhau = edtDKMatKhau.getText().toString();
         String email = edtDKEmail.getText().toString();
-        int role = 2;
+        int role = 1;
 
         User user = new User(taikhoan, matkhau, email, role, id);
         return user;
@@ -111,5 +132,18 @@ public class ManDangKy extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+    }
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private boolean isValidUsername(String username) {
+        String usernameRegex = "^[A-Za-z0-9]+$";
+        Pattern pattern = Pattern.compile(usernameRegex);
+        Matcher matcher = pattern.matcher(username);
+        return matcher.matches();
     }
 }

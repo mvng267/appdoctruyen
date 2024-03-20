@@ -5,6 +5,9 @@
       <entry key="AccountActivity">
         <State />
       </entry>
+      <entry key="ManAdmin">
+        <State />
+      </entry>
       <entry key="NewHome">
         <State />
       </entry>
@@ -25,7 +28,20 @@
         </State>
       </entry>
       <entry key="app">
-        <State />
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="SERIAL_NUMBER" />
+                  <value value="cabfb017" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-03-20T19:00:13.995703800Z" />
+        </State>
       </entry>
     </value>
   </component>

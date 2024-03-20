@@ -7,9 +7,16 @@
     android:orientation="vertical"
     tools:context=".ManDangNhap">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/group_3"/>
+
     <TextView
         android:textStyle="bold"
-        android:layout_marginTop="100dp"
+
         android:layout_gravity="center"
         android:textSize="40sp"
         android:textColor="#E91E63"

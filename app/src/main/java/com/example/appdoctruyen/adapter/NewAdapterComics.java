@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.appdoctruyen.ManNoiDungTruyen;
 import com.example.appdoctruyen.R;
 import com.example.appdoctruyen.model.Comics;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -48,14 +49,28 @@ public class NewAdapterComics extends ArrayAdapter<Comics> {
 
         viewHolder.textViewTitle.setText(comics.getTitle());
         String content = comics.getContent();
-        if (content.length() > 50) {
-            content = content.substring(0, 50) + "...";
-        }
         viewHolder.textViewContent.setText(content);
         viewHolder.textViewUserID.setText(comics.getUserID());
 
         // Sử dụng Picasso để tải và hiển thị ảnh từ URL
         Picasso.get().load(comics.getImg()).placeholder(R.drawable.ic_baseline_cloud_download_24).error(R.drawable.ic_baseline_image_not_supported_24).into(viewHolder.imageView);
+
+        // Lấy username từ Users dựa trên userID
+        FirebaseFirestore.getInstance().collection("Users").document(comics.getUserID())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String username = documentSnapshot.getString("username");
+                        viewHolder.textViewUserID.setText(username);
+                    } else {
+                        viewHolder.textViewUserID.setText("Unknown User");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Xử lý khi có lỗi truy vấn
+                    viewHolder.textViewUserID.setText("Unknown User");
+                    Log.e("Truy vấn Firestore", "Lỗi: " + e.getMessage());
+                });
 
         return convertView;
     }

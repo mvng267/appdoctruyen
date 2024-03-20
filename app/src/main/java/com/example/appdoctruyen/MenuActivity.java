@@ -54,7 +54,7 @@ public class MenuActivity extends AppCompatActivity {
         int phanQuyen = preferenceHelper.getPhanQuyen();
         String email = preferenceHelper.getEmail();
 
-        tvUsername.setText("Username: " + username);
+        tvUsername.setText("Xin chào :" + username);
         Log.e("Check username", "Username: " + username);
         tvUserId.setText("User ID: " + userId);
         if (phanQuyen == 1) {
@@ -98,6 +98,38 @@ public class MenuActivity extends AppCompatActivity {
                     openChangePasswordPopup();
                 }
             });
+        btnChangePassword.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (phanQuyen == 1) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference userRef = db.collection("Users").document(userId);
+
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("role", 2);
+
+                    userRef.update(updates)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // Cập nhật thành công
+                                    Log.d("Firestore", "Cập nhật giá trị 'role' thành công");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Xử lý lỗi nếu cập nhật thất bại
+                                    Log.e("Firestore", "Lỗi khi cập nhật giá trị 'role'", e);
+                                }
+                            });
+                } else if (phanQuyen == 2) {
+                    tvPhanQuyen.setText("Phân quyền: Tài khoản VIP");
+                }
+
+                return true;
+            }
+        });
 
             // Xử lý sự kiện khi chọn các mục trong BottomNavigationView
             BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
@@ -141,6 +173,16 @@ public class MenuActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     String newPassword = etNewPassword.getText().toString();
                     String confirmPassword = etConfirmPassword.getText().toString();
+                    if (newPassword.length() < 8) {
+                        Toast.makeText(MenuActivity.this, "Mật khẩu phải có ít nhất 8 ký tự", Toast.LENGTH_SHORT).show();
+                        Log.e("Thông báo: ", "Mật khẩu phải có ít nhất 8 ký tự");
+                        return;
+                    }
+                    if (confirmPassword.length() < 8) {
+                        Toast.makeText(MenuActivity.this, "Mật khẩu phải có ít nhất 8 ký tự", Toast.LENGTH_SHORT).show();
+                        Log.e("Thông báo: ", "Mật khẩu phải có ít nhất 8 ký tự");
+                        return;
+                    }
 
                     // Kiểm tra mật khẩu mới và xác nhận mật khẩu phải khớp
                     if (newPassword.equals(confirmPassword)) {
@@ -151,9 +193,10 @@ public class MenuActivity extends AppCompatActivity {
 
                         // Đóng dialog
                         changePasswordDialog.dismiss();
-                    } else {
-                        Toast.makeText(MenuActivity.this, "Mật khẩu không khớp nhau, đổi lại đi ", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    Toast.makeText(MenuActivity.this, "Mật khẩu không khớp nhau, đổi lại đi ", Toast.LENGTH_SHORT).show();
+
                 }
             });
 

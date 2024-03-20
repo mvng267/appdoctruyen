@@ -14,19 +14,21 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <!-- Thêm thanh tìm kiếm ở đây -->
-        <EditText
-            android:id="@+id/et_search"
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/group_3" />
+
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Tìm kiếm truyện" />
-
-        <ImageButton
-            android:id="@+id/btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_search" />
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="10dp"
+            android:text="MXH Hóng Chuyện"
+            android:textColor="#E91E63"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
