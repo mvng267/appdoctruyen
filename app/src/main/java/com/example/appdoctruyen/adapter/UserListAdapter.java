@@ -49,7 +49,7 @@ public class UserListAdapter extends ArrayAdapter<Users> {
         if (role == 1) {
             viewHolder.textViewRole.setText("Tài khoản thường");
         } else if (role == 2) {
-            viewHolder.textViewRole.setText("Tài khoản admin");
+            viewHolder.textViewRole.setText("Tài khoản VIP");
         }
 
         return convertView;

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,17 +42,25 @@ public class MenuActivity extends AppCompatActivity {
         tvUsername.setText("Username: " + username);
         Log.e("Check username", "Username: "+ username );
         tvUserId.setText("User ID: " + userId);
-        tvPhanQuyen.setText("Phân quyền: " + phanQuyen);
+        if (phanQuyen == 1) {
+            tvPhanQuyen.setText("Phân quyền: Tài khoản thường");
+        } else if (phanQuyen == 2) {
+            tvPhanQuyen.setText("Phân quyền: Tài khoản VIP");
+        }
         tvEmail.setText("Email" + email);
-
+        Log.e("Check phan quyen", "Gia tri phan quyen ="+ phanQuyen +"Gia tri username" + username );
 
 
         // Xử lý sự kiện khi nhấn nút tạo bài viết mới
         btnCreatePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent menuIntent = new Intent(MenuActivity.this, ManAdmin.class);
-                startActivity(menuIntent);
+                if (phanQuyen == 1) {
+                    Toast.makeText(MenuActivity.this, "Bạn làm gì có quyền mà đăng bài, mua VIP liên hệ Zalo 0869256720", Toast.LENGTH_LONG).show();
+                } else {
+                    Intent menuIntent = new Intent(MenuActivity.this, ManAdmin.class);
+                    startActivity(menuIntent);
+                }
             }
         });
         btnCreatePost = findViewById(R.id.btnCreatePost);

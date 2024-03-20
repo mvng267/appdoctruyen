@@ -71,6 +71,7 @@ public class ManDangNhap extends AppCompatActivity {
                                 preferenceHelper.setUserId(docId);
                                 preferenceHelper.setEmail(email);
                                 preferenceHelper.setUsername(tentk);
+                                preferenceHelper.setPhanQuyen(phanquyen);
 
                                 if (docId != null) {
                                     Intent intent = new Intent(ManDangNhap.this, NewHome.class);
